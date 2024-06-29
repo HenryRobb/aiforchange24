@@ -1,11 +1,12 @@
-export default async function handler(req, res) {
-  const prompt = req.headers['prompt'];
+const {
+  GoogleGenerativeAI,
+  HarmCategory,
+  HarmBlockThreshold,
+} = require("@google/generative-ai");
 
-  const {
-    GoogleGenerativeAI,
-    HarmCategory,
-    HarmBlockThreshold,
-  } = require("@google/generative-ai");
+
+export default async function handler(req, res) {
+  const { prompt } = req.body;
 
   const apiKey = process.env.GEMINI_API_KEY;
   console.log(`don't look at this: `, apiKey);
@@ -23,19 +24,23 @@ export default async function handler(req, res) {
     responseMimeType: "text/plain",
   };
 
-  async function run() {
-    const parts = [
-      { text: `input: ${prompt}` },
-      { text: "output: " },
-    ];
+  const parts = [
+    { text: `input: ${prompt}` },
+    { text: "output: " },
+  ];
 
-    var result = await model.generateContent({
+  console.log("parts: ", parts);
+  
+  
+  try {
+    const result = await model.generateContent({
       contents: [{ role: "user", parts }],
       generationConfig,
     });
-    console.log(result.response.text());
+    console.log('Generated text: ', result.response.text());
+    res.status(200).json({ message: result.response.text() });
+  } catch (error) {
+    console.error('Error generating content:', error);
+    res.status(500).json({ error: 'Failed to generate content' });
   }
-
-  run();
-  res.status(200).json({ message: result.response.text() })
 }
