@@ -1,5 +1,5 @@
-import user from "userSchema";
-import connectDB from "connectDB";
+import user from "./userSchema";
+import connectDB from "./connectDB";
 
 // CREATES A USER WITH username and password
 export default async function handler(req, res) {
@@ -7,15 +7,16 @@ export default async function handler(req, res) {
 
     const { username, password } = req.body;
     const bcrypt = require ('bcrypt');
+    let hash_pass = password;
     bcrypt.hash(password, saltRounds, function (err, hash) {
         if (err) {
             res.status(200).json({ done: false, message: "Password hashing failed." });
         }
-        password = hash;
+        hash_pass = hash;
     });
     const person = new user({
         username: username,
-        password: password,
+        password: hash_pass,
         courseHistory: {}
     });
     await person.create((err, result) => {

@@ -1,5 +1,5 @@
-import user from "userSchema";
-import connectDB from "connectDB";
+import user from "./userSchema";
+import connectDB from "./connectDB";
 import mongoose from "mongoose";
 
 // Logs a solved question to a user.
@@ -8,16 +8,17 @@ export default async function handler(req, res) {
 
     const { username, password, course, subject, correct } = req.body;
     const bcrypt = require ('bcrypt');
+    let hash_pass = password;
     bcrypt.hash(password, saltRounds, function (err, hash) {
         if (err) {
             res.status(200).json({ done: false, message: "Password hashing failed." });
         }
-        password = hash;
+        hash_pass = hash;
     });
     const Person = mongoose.model('User', yourSchema);
 
     const user = await Person.find().byName(username).exec();
-    if(!user.password === password) {
+    if(!user.password === hash_pass) {
         res.status(200).json({ success: false, message: "Either the username or password was incorrect." });
     }
     if(user.solveQuestion(course,subject,correct)) {
