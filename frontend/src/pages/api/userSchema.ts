@@ -30,9 +30,9 @@ const User = new Schema({
     // Method finds the weakest subject by means of the subject with the greatest count in the problemHistory map
     findWeakestSubject(course) {
       let worstSubject : String;
-      let worstNum : Number = Number.MIN_VALUE;
+      let worstNum : Number = Number.MAX_VALUE;
       this.courseHistory[course].forEach((value: Number, key: String) => {
-        if(value > worstNum) {
+        if(value < worstNum) {
           worstNum = value;
           worstSubject = key;
         }
@@ -42,13 +42,13 @@ const User = new Schema({
     solveProblem(course, subject, correct) {
       if(correct) {
         if(this.courseHistory[course][subject]) {
-          this.courseHistory[course][subject] = -1;
+          this.courseHistory[course][subject] = 1;
         } else {
-          this.courseHistory[course][subject] -= 1;
+          this.courseHistory[course][subject] += 1;
         }
       } else {
         if(this.courseHistory[course][subject]) {
-          this.courseHistory[course][subject] = 1;
+          this.courseHistory[course][subject] = -1;
         } else {
           this.courseHistory[course][subject] -= 1;
         }
