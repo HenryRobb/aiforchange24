@@ -56,11 +56,10 @@ export default function getContent(req, res) {
       console.error(err.message);
       res.status(500).json({ error: err.message });
     }
-
-    const userNm = dbInfo(user);
-    let { correct, total } = courseScores(userNm, course, subject);
-    calls(correct, total, subject);
   }
+  const userNm = dbInfo(user);
+  let { correct, total } = courseScores(userNm, course, subject);
+  calls(correct, total, subject);
 }
 
 // if (!userNm) {
