@@ -56,7 +56,7 @@ export default function StickyNote({subject, setname, problemsleft, problems, du
       setWidthString("w-full");
     }
     
-  },[]);
+  },[subject,problems,problemsleft,width]);
 
   return (
     <div className="flex flex-col h-[220px] w-[220px] bg-[#FFDD85] shadow-[rgb(0,0,0,.25)] shadow-lg">
