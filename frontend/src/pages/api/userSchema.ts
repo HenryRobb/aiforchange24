@@ -2,12 +2,12 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const User = new Schema({
-  username : {
+  username: {
     type: String,
     required: true,
     unique: true
   },
-  password : {
+  password: {
     type: String,
     required: true,
   },
@@ -16,7 +16,10 @@ const User = new Schema({
     type: Map,
     of: new Schema({
       type: Map,
-      of: Number
+      of: new Schema({
+        correct: Number,
+        total: Number
+      })
     })
   },
   // problemHistory maps a string type of problem (e.g. "Multiplication") to a count representing # Wrong - # Right.
@@ -29,10 +32,10 @@ const User = new Schema({
   methods: {
     // Method finds the weakest subject by means of the subject with the greatest count in the problemHistory map
     findWeakestSubject(course) {
-      let worstSubject : String;
-      let worstNum : Number = Number.MAX_VALUE;
+      let worstSubject: String;
+      let worstNum: Number = Number.MAX_VALUE;
       this.courseHistory[course].forEach((value: Number, key: String) => {
-        if(value < worstNum) {
+        if (value < worstNum) {
           worstNum = value;
           worstSubject = key;
         }
@@ -40,17 +43,20 @@ const User = new Schema({
       return worstSubject;
     },
     solveProblem(course, subject, correct) {
-      if(correct) {
-        if(this.courseHistory[course][subject]) {
-          this.courseHistory[course][subject] = 1;
+      if (correct) {
+        if (this.courseHistory[course][subject]) {
+          this.courseHistory[course][subject].total = 1;
+          this.courseHistory[course][subject].correct = 1;
         } else {
-          this.courseHistory[course][subject] += 1;
+          this.courseHistory[course][subject].correct += 1;
+          this.courseHistory[course][subject].total += 1;
         }
       } else {
-        if(this.courseHistory[course][subject]) {
-          this.courseHistory[course][subject] = -1;
+        if (this.courseHistory[course][subject]) {
+          this.courseHistory[course][subject].total += 1;
         } else {
-          this.courseHistory[course][subject] -= 1;
+          this.courseHistory[course][subject].correct += 0;
+          this.courseHistory[course][subject].total += 1;
         }
       }
       this.save((err, result) => {
