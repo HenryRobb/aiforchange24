@@ -6,7 +6,7 @@ import StickyNote from "../../components/stickynote/stickynote.component"
 export default function Page(){
   return (
     <main className="">
-      <Header />
+      <Header selected={2}/>
       <div className="flex bg-[#FFF2C5] h-5/6 ">
         <Assignments />
         <div className="h-[90%] my-auto ml-8 py-8 overflow-auto">
