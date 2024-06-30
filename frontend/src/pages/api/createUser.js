@@ -8,9 +8,9 @@ export default async function handler(req, res) {
     const { username, password } = req.body;
     const bcrypt = require ('bcrypt');
     let hash_pass = password;
-    bcrypt.hash(password, saltRounds, function (err, hash) {
+    bcrypt.hash(password, 10, function (err, hash) {
         if (err) {
-            res.status(200).json({ done: false, message: "Password hashing failed." });
+            res.status(200).json({ success: false, message: "Password hashing failed." });
         }
         hash_pass = hash;
     });
@@ -21,10 +21,14 @@ export default async function handler(req, res) {
     });
     await person.create((err, result) => {
         if (err) {
-            res.status(200).json({ done: false, message: "User was not successfully created. The username likely already exists." });
+            localStorage.setItem("username", username);
+            localStorage.setItem("password", hash_pass);
+            res.status(200).json({ success: false, message: "User was not successfully created. The username likely already exists." });
         }
         else {
-            res.status(200).json({ done: true, courseHistory: courseHistory, message: "User was successfully created." });
+            localStorage.setItem("username", username);
+            localStorage.setItem("password", hash_pass);
+            res.status(200).json({ success: true, courseHistory: courseHistory, message: "User was successfully created." });
         }
     });
 }
