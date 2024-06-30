@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         }
         hash_pass = hash;
     });
-    const Person = mongoose.model('User', yourSchema);
+    const Person = mongoose.model('User',user);
 
     const user = await Person.find().byName(username).exec();
     if(user.password === hash_pass) {
