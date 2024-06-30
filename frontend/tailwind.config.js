@@ -9,11 +9,20 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        'themeRed': '#CA1551',
+        'themeBlue': '#345995',
+        'themeYellow': '#EAC435',
+        'themeOrange': '#E97018',
+        'themeGreen': '#389959',
+        'paperBlue': '#1d97b8',
+        'paperRed': '#941c5a'
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
+      }
     },
   },
   plugins: [],
